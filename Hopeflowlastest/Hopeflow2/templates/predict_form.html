@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>HemoFlow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='resources/logo.png') }}" >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Navigation Bar Styles */
+    nav {
+      display: flex;
+      background-color: rgb(247, 226, 187);
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.559);
+      height: 80px;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+    nav .a {
+      margin-left: 2%;
+      display: flex;
+    }
+    nav img{
+      width: 150px;
+    }
+    .nav-links {
+      text-align: right;
+      width: 750px;
+    }
+    .nav-links ul{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .nav-links ul li{
+      list-style: none;
+    }
+    .nav-links ul li a{
+      color: #000000;
+      text-decoration: none;
+      font-size: 16px;
+      font-family: opensans-bold, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color .2s ease-in-out;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #emergency a {
+      color: rgb(201, 11, 11);
+    }
+    .nav-links a:hover {
+      background-color: rgba(170, 151, 117, 0.531);
+    }
+    .nav-links ul li::after{
+      content: '';
+      width: 0%;
+      height: 2px;
+      background: #4E4E50;
+      display: block;
+      margin: auto;
+      transition: 0.5s;
+    }
+    .nav-links ul li:hover::after{
+      width: 80%;
+    }
+    .register {
+      margin-right: 2%;
+    }
+    .register ul {
+      display: flex;
+      list-style: none;
+    }
+    .register ul li {
+      margin-left: 15px;
+    }
+    .register ul li a {
+      color: #000000;
+      text-decoration: none;
+      font-family: opensans-bold, sans-serif;
+      padding: 8px 15px;
+      border-radius: 5px;
+      border: 1px solid #4E4E50;
+    }
+    #signin a {
+      background-color: transparent;
+    }
+    #signup a {
+      background-color: #4E4E50;
+      color: white;
+    }
+    
+    /* Body Styles */
+    body { 
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
+      margin: 0;
+      padding: 100px 24px 24px 24px; /* Added top padding for fixed navbar */
+      color:#111; 
+      background: url("{{ url_for('static', filename='resources/black.jpeg') }}") no-repeat center center fixed;
+      background-size: cover;
+    }
+    .card { 
+      border: 1px solid #e5e7eb; 
+      border-radius: 12px; 
+      padding: 16px; 
+      max-width: 1100px; 
+      background-color: #ffffc5;
+      margin: 0 auto; /* Centered the card */
+    }
+    .grid { 
+      display: grid; 
+      grid-template-columns: repeat(6, minmax(0, 1fr)); 
+      gap: 12px; 
+    }
+    label { 
+      font-size: 12px; 
+      color:#374151; 
+      display:block; 
+      margin-bottom:6px; 
+    }
+    input, select, button { 
+      width: 50%; 
+      padding: 10px; 
+      border: 1px solid #d1d5db; 
+      border-radius: 8px; 
+    }
+    button { 
+      background:#111827; 
+      color:white; 
+      cursor:pointer; 
+      margin-left: 400px;
+      width: 50%;
+    }
+    button:hover { 
+      background:#0b1020; 
+    }
+    .mt-2 { margin-top:8px; }
+    .mt-3 { margin-top:12px; }
+    .mt-4 { margin-top:16px; }
+    .mt-6 { margin-top:24px; }
+    .status { 
+      font-size: 14px; 
+    }
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      margin-top: 16px; 
+      margin-left: auto;
+    }
+    th, td { 
+      border: 1px solid #e5e7eb; 
+      padding: 8px; 
+      text-align: left; 
+      font-size: 14px; 
+    }
+    th { 
+      background:#DC143C; 
+    }
+    .badge { 
+      padding: 4px 8px; 
+      border-radius: 999px; 
+      font-weight: 600; 
+      font-size: 12px; 
+    }
+    .SAFE { 
+      background:#ecfdf5; 
+      color:#065f46; 
+    }
+    .WARNING { 
+      background:#fffbeb; 
+      color:#92400e; 
+    }
+    .CRITICAL { 
+      background:#fef2f2; 
+      color:#991b1b; 
+    }
+    .row-span-2 { 
+      grid-column: span 2 / span 2; 
+    }
+    /* Odd rows */
+    table tr:nth-child(odd) {
+      background-color: #f9f9f9; /* light gray */
+    }
+    /* Even rows */
+    table tr:nth-child(even) {
+      background-color: #e6f7ff; /* white */
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav> 
+    <a class="a" href="/">
+      <img src="{{ url_for('static', filename='resources/logo.png') }}" alt="HemoFlow Logo" style="height:auto; width: 120px; ">
+    </a>
+    <div class="nav-links">
+      <ul>
+        <li><a href="{{ url_for('index') }}"><b>HOME</b></a></li>
+        <li><a href="{{ url_for('whydonateblood') }}"><b>WHY DONATE BLOOD</b></a></li>
+        <li><a href="{{ url_for('predict_form') }}"><b>ABOUT US</b></a></li>
+        <li><a href="{{ url_for('contact') }}"><b>CONTACT US</b></a></li>
+        <li id="emergency"><a href="{{ url_for('emergency') }}"><b>EMERGENCY</b></a></li>
+      </ul>                
+    </div> 
+    <div class="register">
+      <ul>
+        <li id="signin"><a href="{{ url_for('registration') }}"><b>Sign In</b></a></li>
+        <li id="signup"><a href="{{ url_for('registration') }}"><b>Sign Up</b></a></li>
+      </ul>
+    </div>           
+  </nav>
+
+  <!-- Main Content -->
+  <h1 style="color:red; font-size:40px; text-align:center;">
+    Forecast blood demand
+  </h1>
+  <p class="status" style="color:whitesmoke; font-size:20px; text-align:center;">
+    <b>Stock decreases daily by predicted demand; you can add expected daily receipts and an auto-reorder policy.</b>
+  </p>
+
+  <div class="card mt-3">
+    <form id="forecastForm" onsubmit="submitForm(event)">
+      <div class="grid">
+        <div class="row-span-2">
+          <label for="hospital_id">Hospital</label>
+          <select id="hospital_id" name="hospital_id" required>
+            <option value="H001">H001 — NRS Medical College</option>
+            <option value="H002">H002 — Calcutta Medical College</option>
+          </select>
+        </div>
+
+        <div class="row-span-2">
+          <label for="blood_group">Blood Group</label>
+          <select id="blood_group" name="blood_group" required>
+            <option>A+</option><option>B+</option><option>O+</option><option>AB+</option>
+            <option>A-</option><option>B-</option><option>O-</option><option>AB-</option>
+          </select>
+        </div>
+
+        <div class="row-span-2">
+          <label for="component">Component</label>
+          <select id="component" name="component" required>
+            <option>PRBC</option>
+            <option>PLT</option>
+            <option>FFP</option>
+          </select>
+        </div>
+
+        <div class="row-span-2">
+          <label for="horizon_days">Horizon (days)</label>
+          <input id="horizon_days" name="horizon_days" type="number" min="1" max="30" value="14" />
+        </div>
+
+        <div class="row-span-2">
+          <label for="stock_on_hand">Opening stock today (optional)</label>
+          <input id="stock_on_hand" name="stock_on_hand" type="number" placeholder="e.g., 20" />
+        </div>
+
+        <div class="row-span-2">
+          <label for="expected_receipts_daily">Expected receipts per day (optional)</label>
+          <input id="expected_receipts_daily" name="expected_receipts_daily" type="number" placeholder="e.g., 2" />
+        </div>
+
+        <!-- Replenishment policy knobs -->
+        <div class="row-span-2">
+          <label for="target_stock">Target stock (optional)</label>
+          <input id="target_stock" name="target_stock" type="number" placeholder="e.g., 40" />
+        </div>
+
+        <div class="row-span-2">
+          <label for="lead_time_days">Lead time days (optional)</label>
+          <input id="lead_time_days" name="lead_time_days" type="number" placeholder="e.g., 2" />
+        </div>
+
+        <div class="row-span-2">
+          <label for="max_daily_receipt">Max receipts/day (optional)</label>
+          <input id="max_daily_receipt" name="max_daily_receipt" type="number" placeholder="e.g., 25" />
+        </div>
+
+        <div class="row-span-2">
+          <label>&nbsp;</label>
+          <button type="submit">Run forecast</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="msg" class="status mt-3"></div>
+
+    <div id="result" class="mt-4" style="display:none">
+      <h3><center>Results</center></h3>
+      <table id="resultTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Forecast Units</th>
+            <th>Backlog In</th>
+            <th>Stock (open)</th>
+            <th>Arriving Receipts</th>
+            <th>Gap Units</th>
+            <th>Stock (after)</th>
+            <th>Alert</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <!-- Chart + action buttons INSIDE results -->
+      <div class="mt-4" style="height: 360px;">
+        <canvas id="forecastChart"></canvas>
+      </div>
+      <div class="mt-3">
+        <button id="downloadCsvBtn" type="button">Download CSV</button>
+        <button id="downloadPngBtn" type="button">Download Chart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let forecastChart = null;
+    let lastRows = []; // <-- store latest rows for downloads
+
+    function renderChart(rows) {
+      const labels     = rows.map(r => r.date);
+      const stockAfter = rows.map(r => Number(r.stock_after));
+      const forecast   = rows.map(r => Number(r.forecast_units));
+      const gapUnits   = rows.map(r => Number(r.gap_units));
+
+      const canvas = document.getElementById('forecastChart');
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      if (forecastChart) forecastChart.destroy();
+
+      forecastChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Stock (after)',  data: stockAfter, borderWidth: 2, tension: 0.25, pointRadius: 2 },
+            { label: 'Forecast Units', data: forecast,   borderWidth: 2, tension: 0.25, pointRadius: 2 },
+            { label: 'Gap Units',      data: gapUnits,   borderWidth: 1, borderDash: [6,4], tension: 0.25, pointRadius: 2 },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            x: { title: { display: true, text: 'Date' } },
+            y: { beginAtZero: true, title: { display: true, text: 'Units' } }
+          },
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${Number(ctx.parsed.y).toFixed(2)}` } }
+          }
+        }
+      });
+    }
+
+    function wireDownloadButtons() {
+      const btnCsv = document.getElementById('downloadCsvBtn');
+      const btnPng = document.getElementById('downloadPngBtn');
+      if (btnCsv) {
+        btnCsv.onclick = () => {
+          if (!lastRows.length) return;
+          const headers = ["date","forecast_units","backlog_in","stock_open","arriving_receipts","gap_units","stock_after","alert"];
+          const csv = [headers.join(",")]
+            .concat(lastRows.map(r => headers.map(h => r[h]).join(",")))
+            .join("\n");
+          const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url; a.download = "forecast_results.csv"; a.click();
+          URL.revokeObjectURL(url);
+        };
+      }
+      if (btnPng) {
+        btnPng.onclick = () => {
+          const canvas = document.getElementById('forecastChart');
+          if (!canvas) return;
+          const link = document.createElement('a');
+          link.download = 'forecast_chart.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        };
+      }
+    }
+
+    async function submitForm(e) {
+      e.preventDefault();
+      const msg = document.getElementById('msg');
+      const tableBody = document.querySelector('#resultTable tbody');
+      const resultBox = document.getElementById('result');
+      tableBody.innerHTML = '';
+      resultBox.style.display = 'none';
+      msg.textContent = 'Running forecast...';
+
+      const payload = {
+        hospital_id: document.getElementById('hospital_id').value,
+        blood_group: document.getElementById('blood_group').value,
+        component: document.getElementById('component').value,
+        horizon_days: parseInt(document.getElementById('horizon_days').value || '14')
+      };
+      [["stock_on_hand","number"],["expected_receipts_daily","number"],["target_stock","number"],["lead_time_days","number"],["max_daily_receipt","number"]]
+        .forEach(([id, type]) => {
+          const v = document.getElementById(id)?.value;
+          if (v !== undefined && v !== "") payload[id] = type === "number" ? Number(v) : v;
+        });
+
+      try {
+        const resp = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          msg.textContent = 'Error: ' + (data.error || 'Request failed');
+          return;
+        }
+
+        const rows = data.forecasts || [];
+        if (!rows.length) {
+          msg.textContent = 'No forecasts returned.';
+          return;
+        }
+
+        // Fill table
+        rows.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.date}</td>
+            <td>${Number(r.forecast_units).toFixed(2)}</td>
+            <td>${Number(r.backlog_in).toFixed(2)}</td>
+            <td>${Number(r.stock_open).toFixed(2)}</td>
+            <td>${Number(r.arriving_receipts).toFixed(2)}</td>
+            <td>${Number(r.gap_units).toFixed(2)}</td>
+            <td>${Number(r.stock_after).toFixed(2)}</td>
+            <td><span class="badge ${r.alert}">${r.alert}</span></td>
+          `;
+          tableBody.appendChild(tr);
+        });
+
+        // Save globally for downloads, render chart, show section
+        lastRows = rows;                 // <-- for CSV/PNG
+        renderChart(rows);
+        wireDownloadButtons();           // <-- bind buttons now that they exist
+        msg.textContent = `Done. ${rows.length} days forecasted.`;
+        resultBox.style.display = 'block';
+      } catch (err) {
+        msg.textContent = 'Network or server error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

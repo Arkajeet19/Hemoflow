@@ -1,0 +1,9 @@
+hospital_id,name,lat,lon,address
+H001,NRS Medical College,22.5645,88.3702,"138 AJC Bose Rd, Sealdah, Kolkata"
+H002,Medical College Kolkata,22.5733,88.3639,"88 College St, Kolkata"
+H003,IPGMER & SSKM Hospital,22.5405,88.3468,"AJC Bose Rd, Bhowanipore, Kolkata"
+H004,R.G. Kar Medical College & Hospital,22.6042,88.3777,"Khudiram Bose Sarani, Shyambazar, Kolkata"
+H005,Calcutta National Medical College,22.5419,88.3652,"1, Gorachand Rd, Park Circus, Kolkata"
+H006,Apollo Multispeciality Hospitals (Apollo Gleneagles),22.5764,88.4057,"58 Canal Circular Rd, Kadapara, Kolkata"
+H007,AMRI Hospitals Dhakuria,22.5145,88.3722,"P-4 & 5, Gariahat Rd, Dhakuria, Kolkata"
+H008,AMRI Hospitals Salt Lake,22.5796,88.4139,"JC-16 & 17, Sector III, Salt Lake, Kolkata"

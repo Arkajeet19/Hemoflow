@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank - Fixed Scrolling Text</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(220, 53, 69, 0.9), rgba(220, 53, 69, 0.8));
+            background-size: cover;
+            border-radius: 15px;
+            padding: 60px 40px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .animated-text-container {
+            height: 80px;
+            overflow: hidden;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .animated-text {
+            font-size: 2.2rem;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+        }
+        
+        .changing-words {
+            display: inline-block;
+            height: 80px;
+            overflow: hidden;
+            vertical-align: top;
+            position: relative;
+            text-align: left;
+        }
+        
+        .words-wrapper {
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .word {
+            display: block;
+            padding: 0 10px;
+            color: #ffccd5;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            height: 80px;
+            line-height: 80px;
+            width: 100%;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #dc3545;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-card i {
+            font-size: 3rem;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #dc3545;
+        }
+        
+        .counter {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+        
+        .counter-item {
+            text-align: center;
+        }
+        
+        .counter-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #dc3545;
+        }
+        
+        .counter-text {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .animated-text {
+                font-size: 1.8rem;
+            }
+            
+            .feature-card {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 40px 20px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .animated-text {
+                font-size: 1.5rem;
+            }
+            
+            .word {
+                height: 60px;
+                line-height: 60px;
+            }
+            
+            .animated-text-container {
+                height: 60px;
+            }
+            
+            .changing-words {
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Blood Donation Saves Lives</h1>
+            <div class="animated-text-container">
+                <div class="animated-text">
+                    Your donation can <div class="changing-words">
+                        <div class="words-wrapper">
+                            <div class="word">save a life</div>
+                            <div class="word">bring hope</div>
+                            <div class="word">create smiles</div>
+                            <div class="word">make a difference</div>
+                            <div class="word">give time</div>
+                            <div class="word">support healing</div>
+                        </div>
+                    </div> today
+                </div>
+            </div>
+            <p>Join thousands of donors who are making a difference in their communities. Every drop counts.</p>
+            <a href="#" class="cta-button">Become a Donor</a>
+        </div>
+        
+        <div class="counter">
+            <div class="counter-item">
+                <div class="counter-number" id="donors-count">5,247</div>
+                <div class="counter-text">Active Donors</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-number" id="lives-saved">12,836</div>
+                <div class="counter-text">Lives Saved</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-number" id="donations">8,419</div>
+                <div class="counter-text">Total Donations</div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <i class="fas fa-tint"></i>
+                <h3>Why Donate?</h3>
+                <p>Blood is the most precious gift. Your donation can save up to three lives and there's no substitute for human blood.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h3>Who Can Donate?</h3>
+                <p>Most people in good health, at least 17 years old, and weighing at least 110 pounds can donate blood.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-heartbeat"></i>
+                <h3>The Process</h3>
+                <p>The entire process takes about an hour. The actual donation only takes 8-10 minutes. It's safe and simple.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Words to cycle through
+        const words = document.querySelectorAll('.word');
+        const wordsWrapper = document.querySelector('.words-wrapper');
+        const wordHeight = 80; // Height of each word element
+        
+        // Set initial position
+        wordsWrapper.style.transform = 'translateY(0)';
+        
+        // Animation variables
+        let currentIndex = 0;
+        let changeCount = 0;
+        const totalChangesBeforeReset = 4; // Number of changes before reset
+        const scrollSpeed = 800; // ms for scrolling animation
+        const pauseDuration = 2000; // ms to pause between changes
+        
+        function animateText() {
+            // Calculate next index
+            currentIndex = (currentIndex + 1) % words.length;
+            
+            // Scroll to the next word
+            wordsWrapper.style.transition = `transform ${scrollSpeed}ms cubic-bezier(0.68, -0.55, 0.27, 1.55)`;
+            wordsWrapper.style.transform = `translateY(-${currentIndex * wordHeight}px)`;
+            
+            // After scroll completes
+            setTimeout(() => {
+                changeCount++;
+                
+                // Check if we need to reset
+                if (changeCount >= totalChangesBeforeReset) {
+                    // Fast scroll back to top
+                    wordsWrapper.style.transition = `transform ${scrollSpeed/2}ms ease-out`;
+                    wordsWrapper.style.transform = 'translateY(0)';
+                    
+                    setTimeout(() => {
+                        currentIndex = 0;
+                        changeCount = 0;
+                        setTimeout(animateText, pauseDuration);
+                    }, scrollSpeed/2);
+                } else {
+                    // Continue with next change after pause
+                    setTimeout(animateText, pauseDuration);
+                }
+            }, scrollSpeed);
+        }
+        
+        // Start the animation after initial pause
+        setTimeout(animateText, 1000);
+        
+        // Counter animation
+        function animateCounter(element, target) {
+            let count = 0;
+            const duration = 2000; // ms
+            const increment = target / (duration / 16);
+            
+            function update() {
+                count += increment;
+                if (count < target) {
+                    element.textContent = Math.floor(count);
+                    requestAnimationFrame(update);
+                } else {
+                    element.textContent = target;
+                }
+            }
+            
+            update();
+        }
+        
+        // Start counter animation when page loads
+        window.addEventListener('load', () => {
+            animateCounter(document.getElementById('donors-count'), 5247);
+            animateCounter(document.getElementById('lives-saved'), 12836);
+            animateCounter(document.getElementById('donations'), 8419);
+        });
+    </script>
+</body>
+</html>
